@@ -1,0 +1,85 @@
+site_name: Mal-Dev AI
+site_description: Malware triage agent with FastAPI and multi-agent graph
+site_dir: site
+docs_dir: docs
+
+repo_url: https://github.com/devarajan-here/Mal-Dev-AI
+repo_name: devarajan-here/Mal-Dev-AI
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - content.code.copy
+    - content.tabs.link
+  logo: assets/logo_malops.png
+  favicon: assets/logo_malops.png
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - scheme: slate
+      primary: black
+      accent: pink
+
+nav:
+  - Overview: index.md
+  - Getting Started: getting-started.md
+  - API: api.md
+  - Architecture:
+      - Overall Architecture: architecture/overall.md
+      - Langgraph Architecture: architecture/langgraph.md
+  - Reference:
+      - API App: reference/api_app.md
+      - API Storage: reference/api_storage.md
+      - Agent Graph: reference/agent_graph.md
+      - Tools: reference/tools.md
+      - Unit Tests: reference/tests.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths:
+            - .
+          options:
+            docstring_style: google
+            show_source: true
+            show_signature: true
+            separate_signature: true
+            show_root_heading: true
+          setup_commands:
+            - import os, sys, types
+            - sys.path.insert(0, os.getcwd())
+            - mods = [
+              'yara',
+              'pefile',
+              'capa', 'capa.main', 'capa.rules', 'capa.engine', 'capa.loader', 'capa.features',
+              'capa.render', 'capa.render.json', 'capa.render.utils', 'capa.render.default',
+              'capa.capabilities', 'capa.capabilities.common', 'capa.render.result_document',
+              'capa.features.freeze', 'capa.features.freeze.features', 'capa.features.common',
+              'langchain_core', 'langchain_core.tools'
+              ]
+            - [sys.modules.setdefault(m, types.ModuleType(m)) for m in mods]
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.emoji
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed
