@@ -26,26 +26,27 @@ Mal-Dev AI is your private, automated malware analyst. It takes a suspicious fil
 - Git
 - (Optional) [Ollama](https://ollama.com/) for local AI
 
-### Database & Config
-1.  **Clone the repo**:
+### Installation over Private Repo
+
+1.  **Clone the repository**:
     ```bash
     git clone https://github.com/devarajan-here/Mal-Dev-AI.git
     cd Mal-Dev-AI
     ```
-2.  **Setup Keys**: Copy `.env.example` to `.env` and add your API keys.
-    ```bash
-    cp .env.example .env
-    # Edit .env with your keys (GEMINI_API_KEY, VT_API_KEY, etc.)
-    ```
 
-### Run with Docker (Recommended)
-```bash
-bash run.sh
-```
-Or manually:
-```bash
-docker compose up -d --build
-```
+2.  **Run Setup**:
+    ```bash
+    bash run.sh
+    ```
+    *This script will ask for your API keys, set up the environment, and start the Docker containers.*
+
+3.  **Manual Start (Alternative)**:
+    If you prefer manual setup:
+    ```bash
+    cp .env.example .env  # Edit .env with keys
+    unzip -o rules/capa-rules.zip -d rules/
+    docker compose up -d --build
+    ```
 
 - **UI**: [http://localhost:8501](http://localhost:8501)
 - **API**: [http://localhost:8000](http://localhost:8000)

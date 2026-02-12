@@ -3,38 +3,30 @@
 set -eo pipefail
 
 REPO_URL="https://github.com/devarajan-here/Mal-Dev-AI.git"
-PROJECT_DIR="$(pwd)/Mal-Dev-AI"
-COMPOSE_FILE="docker-compose.yml"
+# Determine if running inside the repo or standalone
+if [ -f "docker-compose.yml" ] && [ -d ".git" ]; then
+  log "Running inside existing repository."
+  PROJECT_DIR="$(pwd)"
+else
+  # Standalone mode: Clone into subdirectory
+  PROJECT_DIR="$(pwd)/Mal-Dev-AI"
+  
+  # Remove existing project directory if it already exists
+  if [ -d "$PROJECT_DIR" ]; then
+    log "Removing existing directory at $PROJECT_DIR..."
+    rm -rf "$PROJECT_DIR"
+  fi
 
-log(){ echo "[*] $*"; }
-die(){ echo "[ERROR] $*" >&2; exit 1; }
-
-# Ctrl+C
-cleanup(){
-  echo -e "\n[!] Setup aborted by user. Exiting..."
-  exit 1
-}
-trap cleanup INT
-
-# Required dependencies
-command -v docker >/dev/null 2>&1 || die "docker not found"
-docker compose version >/dev/null 2>&1 || die "docker compose not found"
-command -v git >/dev/null 2>&1 || die "git not found"
-command -v unzip >/dev/null 2>&1 || die "unzip not found"
-
-# Remove existing project directory if it already exists
-if [ -d "$PROJECT_DIR" ]; then
-  log "Removing existing directory at $PROJECT_DIR..."
-  rm -rf "$PROJECT_DIR"
+  # Clone repository
+  log "Cloning repository..."
+  git clone --branch main --depth 1 "$REPO_URL" "$PROJECT_DIR"
 fi
 
-# Clone repository
-log "Cloning repository..."
-git clone --branch main --depth 1 "$REPO_URL" "$PROJECT_DIR"
-
-# Create .env from template
-cp "$PROJECT_DIR/.env.example" "$PROJECT_DIR/.env"
-log ".env file created from .env.example"
+# Create .env from template if not exists
+if [ ! -f "$PROJECT_DIR/.env" ]; then
+  cp "$PROJECT_DIR/.env.example" "$PROJECT_DIR/.env"
+  log ".env file created from .env.example"
+fi
 
 # Ask for API Keys
 read -rp "Enter your GEMINI_API_KEY: " GEMINI_API_KEY
